@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pycache/
+*.pyc
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Local secrets (never commit)
+.env
+.secrets/.env
+.secrets/*.env
+
+# Local data
+data/

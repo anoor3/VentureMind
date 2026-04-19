@@ -29,24 +29,28 @@ class WriterAgent:
         if not self.client:
             return self._fallback_report(query, tasks, insights, findings_count)
 
-        response = self.client.chat.completions.create(  # type: ignore[union-attr]
-            model=self.model,
-            temperature=0.4,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an elite investment memo writer.",
-                },
-                {
-                    "role": "user",
-                    "content": (
-                        "Compose a report for the research query \"{query}\"\n"
-                        f"Tasks: {tasks}\nInsights: {insights}\n"
-                        f"Total findings: {findings_count}"
-                    ),
-                },
-            ],
-        )
+        try:
+            response = self.client.chat.completions.create(  # type: ignore[union-attr]
+                model=self.model,
+                temperature=0.4,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an elite investment memo writer.",
+                    },
+                    {
+                        "role": "user",
+                        "content": (
+                            "Compose a report for the research query \"{query}\"\n"
+                            f"Tasks: {tasks}\nInsights: {insights}\n"
+                            f"Total findings: {findings_count}"
+                        ),
+                    },
+                ],
+            )
+        except Exception:
+            return self._fallback_report(query, tasks, insights, findings_count)
+
         return response.choices[0].message.content or ""  # type: ignore[index]
 
     def _fallback_report(

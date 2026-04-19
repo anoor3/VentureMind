@@ -35,23 +35,27 @@ class AnalystAgent:
         if not self.client:
             return self._fallback_analysis(query, context)
 
-        response = self.client.chat.completions.create(  # type: ignore[union-attr]
-            model=self.model,
-            temperature=0.3,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an investment analyst who explains insights clearly.",
-                },
-                {
-                    "role": "user",
-                    "content": (
-                        "Analyze the following findings and synthesize insights for "
-                        f"the research query '{query}'.\n\nFindings:\n{context}"
-                    ),
-                },
-            ],
-        )
+        try:
+            response = self.client.chat.completions.create(  # type: ignore[union-attr]
+                model=self.model,
+                temperature=0.3,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an investment analyst who explains insights clearly.",
+                    },
+                    {
+                        "role": "user",
+                        "content": (
+                            "Analyze the following findings and synthesize insights for "
+                            f"the research query '{query}'.\n\nFindings:\n{context}"
+                        ),
+                    },
+                ],
+            )
+        except Exception:
+            return self._fallback_analysis(query, context)
+
         return response.choices[0].message.content or ""  # type: ignore[index]
 
     def _fallback_analysis(self, query: str, context: str) -> str:

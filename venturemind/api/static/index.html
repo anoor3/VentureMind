@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VentureMind</title>
+    <meta name="description" content="A calm, luxury interface for VentureMind reports." />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <div class="container">
+        <div class="header">
+          <div class="brand">
+            <h1><span class="spark"></span> VentureMind</h1>
+            <p>
+              Private research concierge. Type a question, get an investment-style memo.
+              <br />
+              Tip: press <strong>⌘ + Enter</strong> to run.
+            </p>
+          </div>
+          <div class="badge">
+            Local • Your keys stay on your machine
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-header">
+              <h2>Prompt</h2>
+            </div>
+            <div class="card-body">
+              <label for="query">What do you want to research?</label>
+              <textarea
+                id="query"
+                placeholder="Example: Find promising AI healthcare startups, including recent funding, key players, risks, and near-term thesis."
+              ></textarea>
+
+              <div class="actions">
+                <button class="btn primary" id="run">Generate</button>
+                <span class="hint">Creates `data/exports/latest_report.csv` too.</span>
+              </div>
+
+              <div class="status" id="status"></div>
+            </div>
+          </div>
+
+          <div class="card output">
+            <div class="card-header">
+              <h2>Memo</h2>
+            </div>
+            <div class="card-body">
+              <div class="output-toolbar">
+                <button class="btn" id="copy" disabled>Copy</button>
+                <button class="btn" id="download" disabled>Download</button>
+                <a class="btn" href="/docs" target="_blank" rel="noreferrer">API</a>
+              </div>
+              <div class="report" id="report"></div>
+              <div class="footer">
+                If you see “insufficient_quota”, enable API billing for your OpenAI key.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+

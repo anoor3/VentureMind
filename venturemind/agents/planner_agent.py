@@ -27,23 +27,26 @@ class PlannerAgent:
         if not self.client:
             return self._fallback_plan(query)
 
-        response = self.client.chat.completions.create(  # type: ignore[union-attr]
-            model=self.model,
-            temperature=0.2,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a meticulous research project planner. "
-                        "Return a concise numbered list of tasks."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": f"Plan research to answer: {query}",
-                },
-            ],
-        )
+        try:
+            response = self.client.chat.completions.create(  # type: ignore[union-attr]
+                model=self.model,
+                temperature=0.2,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a meticulous research project planner. "
+                            "Return a concise numbered list of tasks."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Plan research to answer: {query}",
+                    },
+                ],
+            )
+        except Exception:
+            return self._fallback_plan(query)
 
         content = response.choices[0].message.content or ""  # type: ignore[index]
         tasks = self._parse_tasks(content)

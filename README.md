@@ -29,40 +29,90 @@ See the repository for the complete module layout.
 
 ## Setup
 
-1. **Create a virtual environment**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Set environment variables**
-   ```bash
-   export OPENAI_API_KEY="sk-..."
-   export TAVILY_API_KEY="tvly-..."
-   # Optional overrides
-   export CHROMA_PATH="./data/chroma"
-   export OPENAI_MODEL="gpt-4o-mini"
-   export MAX_TASKS=5
-   ```
+### 0) Prerequisites
 
-Without API keys the system falls back to deterministic heuristics, which is useful for local testing but lacks live data.
+- Python 3.9+
+- An OpenAI API key (`OPENAI_API_KEY`) for full planner/analyst/writer quality
+- A Tavily API key (`TAVILY_API_KEY`) for live web search
+
+### 1) Create a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 2) Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 3) Add API keys (safe local dev)
+
+This repo supports a local secrets file that is gitignored.
+
+1) Create `.secrets/.env`:
+
+```bash
+mkdir -p .secrets
+cat > .secrets/.env <<'EOF'
+OPENAI_API_KEY=sk-...
+TAVILY_API_KEY=tvly-...
+
+# Optional overrides
+CHROMA_PATH=./data/chroma
+OPENAI_MODEL=gpt-4o-mini
+MAX_TASKS=5
+EOF
+```
+
+2) Run the app normally — it auto-loads `.secrets/.env` on startup.
+
+If API keys are missing (or OpenAI quota is unavailable), VentureMind falls back to deterministic heuristics for some steps.
 
 ## Usage
 
-### Run the CLI
+### Quickstart (copy/paste)
 
 ```bash
-python main.py "Find promising AI healthcare startups"
+cd /Users/abdullahnoor/Documents/VentureMind/VentureMind
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+uvicorn venturemind.api.fastapi_app:app --reload
+```
+
+Open `http://127.0.0.1:8000/`.
+
+### Option A: Web UI (recommended)
+
+Start the server:
+
+```bash
+source .venv/bin/activate
+uvicorn venturemind.api.fastapi_app:app --reload
+```
+
+Open:
+
+- Web UI: `http://127.0.0.1:8000/`
+- API docs (Swagger): `http://127.0.0.1:8000/docs`
+- API docs (ReDoc): `http://127.0.0.1:8000/redoc`
+
+### Option B: CLI
+
+```bash
+source .venv/bin/activate
+python3 main.py "Find promising AI healthcare startups"
 ```
 
 This executes the LangGraph pipeline, persists research snippets to Chroma, saves the resulting report to `data/exports/cli_report.csv`, and prints the memo to stdout.
 
-### Start the API
+### Option C: API (programmatic)
 
 ```bash
+source .venv/bin/activate
 uvicorn venturemind.api.fastapi_app:app --reload
 ```
 
@@ -89,6 +139,22 @@ Run the unit tests with pytest:
 ```bash
 pytest
 ```
+
+## Troubleshooting
+
+### `ModuleNotFoundError` (e.g. `tavily`)
+
+You’re not running inside the virtualenv.
+
+```bash
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python3 main.py "test"
+```
+
+### OpenAI `429 insufficient_quota`
+
+Your API key is valid, but billing/quota isn’t enabled for that API project/org. Enable API billing in the OpenAI dashboard, then retry.
 
 ## Extending VentureMind
 
