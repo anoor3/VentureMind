@@ -2,6 +2,9 @@
 
 VentureMind is an autonomous multi-agent AI research system that plans, gathers, analyzes, and writes investment-style reports on startups and markets. It demonstrates modern agent-engineering practices such as LangGraph workflows, Retrieval Augmented Generation (RAG), tool use, and an API backend powered by FastAPI.
 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Abdullah%20Noor-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/abdullah-noor1/)
+[![Email](https://img.shields.io/badge/Email-abdullahnoorllc%40gmail.com-EA4335?logo=gmail&logoColor=white)](mailto:abdullahnoorllc@gmail.com)
+
 ## Architecture
 
 - **Agents** – Planner, Researcher, Analyst, and Writer agents collaborate in a LangGraph pipeline powered by OpenAI models.
